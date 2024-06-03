@@ -1,26 +1,35 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- binding date to props in order to dynamically update values -->
+    <navbar :pages="pages" :active-page="activePage" :nav-link-click="(index) => activePage = index"> <!-- here we are inside the parent class -->
+    </navbar>
+
+    <!-- Props are used to define properties of components (use lowercase names followe by '-' if there are multiple words per name)-->
+    <page-viewer :page="pages[activePage]">
+    </page-viewer>
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Navbar from './components/Navbar.vue';
+import PageViewer from './components/PageViewer.vue';
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+export default{ //this is the component 'App'
+    components:{
+        Navbar,
+        PageViewer,
+    },
+
+    data(){ //data function returns an object (considered as state of application in other frameworks)
+        return{
+            activePage: 0,
+            // useDarkNavbar: true,
+            pages: [
+                {pageTitle: 'Home', content: 'Welcome to the home page', text: 'Home', url: 'index.html', title: 'Leads to home page'},
+                {pageTitle: 'About', content: 'Welcome to the about page', text: 'About', url: 'about.html', title: 'Leads to about page'},
+                {pageTitle: 'Contact', content: 'Welcome to the contact page', text: 'Contact', url: 'contact.html', title: 'Leads to contact page'}
+            ],
+        };
+    },
 }
+
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
