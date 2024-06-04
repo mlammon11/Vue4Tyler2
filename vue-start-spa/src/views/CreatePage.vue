@@ -25,12 +25,6 @@
                     <input type="text" class="form-control" v-model="linkText">
                 </div>
 
-                <div class="mb-3">
-                    <label for="" class="form-label">
-                        Link URL
-                    </label>
-                    <input type="text" class="form-control" v-model="linkUrl">
-                </div>
                 <div class="row mb-3">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" v-model="published">
@@ -51,6 +45,59 @@
     </form>
 </template>
 
+<!-- Composition API -->
+<script setup>
+import {inject, ref, computed, watch} from 'vue'
+import {useRouter} from 'vue-router';
+
+const router = useRouter();
+const pages = inject('$pages');
+const bus = inject('$bus')
+
+let pageTitle = ref('');
+let content = ref('');
+let linkText = ref('');
+let published = ref(true);
+
+function submitForm(){
+    if(!pageTitle || !content || !linkText){
+        alert('Please fill out the form full');
+        return;
+    }
+
+    let newPage = {
+        pageTitle: pageTitle.value,
+        content: content.value,
+        link:{
+            text: linkText.value,
+        },
+        published: published.value
+    };
+
+    pages.addPage(newPage)
+
+    //camelCase
+    // $emit helps to declare an event (this is connected to App.vue component prop 'page-created')
+   bus.$emit('page-created', newPage); 
+
+   router.push({path: '/pages'});
+}
+
+const isFormInvalid = computed(() => !pageTitle || !content || !linkText );
+
+// the value being 'watched' needs to be reactive aka created with ref() or reactive()
+watch(pageTitle, (newTitle, oldTitle) => { 
+    if(linkText.value === oldTitle){ //if the current link text == oldTitle, then user is not changing the link text
+        linkText.value = newTitle;
+    }
+
+    //if they are't equal then leave it be, the user is changing the link text
+});
+
+</script>
+
+
+<!-- OPTIONS API
 <script>
 export default{
     emits: { //validating event, this is helpful to debug code
@@ -119,4 +166,7 @@ export default{
     }
 }
 
-</script>
+</script> -->
+
+
+
