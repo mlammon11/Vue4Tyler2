@@ -32,7 +32,9 @@
 
         <div class="mb-3">
             <button class="btn btn-primary me-2" @click.prevent="submit">Edit</button>
-            <button class="btn btn-secondary" @click.prevent="cancel">Cancel</button>
+            <button class="btn btn-secondary me-2" @click.prevent="cancel">Cancel</button>
+            <button class="btn btn-danger" @click.prevent="deletePage">Delete</button>
+
         </div>
     </form>
 </template>
@@ -75,6 +77,14 @@ function gotoPagesList() {
 function cancel() {
     // Revert pageCopy to the initial page state
     pageCopy = reactive(cloneDeep(initialPageState));
+    gotoPagesList();
+}
+
+function deletePage(){
+    pages.removePage(index);
+
+    bus.$emit('page-deleted', {index});
+
     gotoPagesList();
 }
 </script>
